@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Вибір Дати та Часу</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        /* ... (стилі залишаються без змін) ... */
+    </style>
+</head>
+<body>
+    <h2>Виберіть дату та час бронювання:</h2>
+    <input type="text" id="datetimePicker" placeholder="Обери дату та час"><br><br>
+    <button id="submitBtn">Підтвердити</button>
+    <div id="errorMsg">Ця сторінка має бути відкритою через Telegram.</div>
+
+    <!-- Підключення Flatpickr -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/uk.js"></script>
+    <script>
+        alert("Скрипт Web App завантажено!");
+
+        alert("Ініціалізуємо Flatpickr...");
+        flatpickr("#datetimePicker", {
+            enableTime: true,
+            dateFormat: "d.m.Y H:i",
+            locale: "uk",
+            minDate: "today"
+        });
+        alert("Flatpickr ініціалізовано.");
+
+        // Тут перевіряємо, чи Telegram WebApp доступний
+        if (window.Telegram && window.Telegram.WebApp) {
+            alert("Telegram WebApp API доступний!");
+            document.getElementById('submitBtn').addEventListener('click', function() {
+                alert("Натиснули 'Підтвердити'.");
+                
+                const selectedDatetime = document.getElementById('datetimePicker').value;
+                alert("Вибрано дату та час: " + selectedDatetime);
+
+                if (selectedDatetime) {
+                    alert("Відправляємо дані: " + selectedDatetime);
+                    window.Telegram.WebApp.sendData(selectedDatetime);
+
+                    alert("Закриваємо Web App...");
+                    window.Telegram.WebApp.close();
+                } else {
+                    alert("Будь ласка, оберіть дату та час.");
+                }
+            });
+        } else {
+            alert("Telegram WebApp API недоступний (ймовірно відкрито поза Telegram).");
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('errorMsg').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
